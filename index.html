@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nabzx API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            background: url('https://files.catbox.moe/ak49rs.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow-x: hidden;
+        }
+
+        h1, h2, p {
+            margin: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 800px;
+            animation: fadeIn 2s ease;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #e2e8f0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Content Section */
+        .content {
+            max-width: 1200px;
+            margin: 50px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            flex: 1 1 calc(33.333% - 20px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.4);
+        }
+
+        .card h2 {
+            font-size: 22px;
+            color: #60a5fa;
+        }
+
+        .card p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #e2e8f0;
+        }
+
+        .card-icon {
+            font-size: 50px;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styles */
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: #2563eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .button:hover {
+            background: #1e40af;
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            margin: 40px auto;
+            max-width: 800px;
+            color: #e2e8f0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card {
+                flex: 1 1 100%;
+            }
+
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Nabzx API</h1>
+        <p>Powered By Nabzx</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="card">
+            <div class="card-icon">⚙️</div>
+            <h2>Tentang API</h2>
+            <p>API ini mempermudah akses ke berbagai layanan dengan fitur lengkap dan bebas biaya.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔋</div>
+            <h2>Status Baterai</h2>
+            <p id="battery-status">Memuat informasi baterai...</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">🌐</div>
+            <h2>Alamat IP Anda</h2>
+            <p id="ip-address">Memuat IP address...</p>
+        </div>
+    </div>
+
+    <!-- Buttons Section -->
+    <div class="buttons">
+        <a href="https://google.com" target="_blank" class="button">Api Create Qris</a>
+        <a href="https://github.com" target="_blank" class="button">Api Status Payment</a>
+        <a href="https://stackoverflow.com" target="_blank" class="button">Api Download VT</a>
+        <a href="https://twitter.com" target="_blank" class="button">Twitter</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Nabzx API. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Get battery status
+        navigator.getBattery().then(function(battery) {
+            const batteryStatus = document.getElementById('battery-status');
+            batteryStatus.textContent = `Baterai: ${Math.round(battery.level * 100)}%`;
+        });
+
+        // Get IP address
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip-address').textContent = `IP Address: ${data.ip}`;
+            });
+    </script>
+</body>
+</html>
