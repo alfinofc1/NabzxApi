@@ -213,6 +213,42 @@ app.get('/api/download/ytdl', async (req, res) => {
   }
 });
 
+app.get('api/ai/dukun', async (req, res) => {  // <-- Ganti GET menjadi POST
+    const content = req.body.content; // <-- Ambil data dari body request
+
+    if (!content) {
+        return res.json({
+            status: false,
+            creator: "kiki",
+            message: '[!] masukan data content di body request', // <-- Pesan error diubah
+        });
+    }
+
+    axios.get(`https://api.siputzx.my.id/api/ai/dukun?content=${encodeURIComponent(content)}`) // <-- Gunakan content dari body
+        .then(response => {
+            const data = response.data;
+            if (data && data.status === true && data.result) {
+                
+                res.json({
+                    status: true,
+                    creator: `${creator}`,
+                    result: data.result,
+                });
+            } else {
+                res.json({
+                    status: false,
+                    creator: `${creator}`,
+                    message: "Gagal mengambil data dari API Dukun atau data tidak sesuai format",
+                });
+            }
+
+        })
+        .catch(error => {
+            console.error("Error saat memanggil API Dukun:", error);
+            res.json(loghandler.error);
+        });
+});
+
 app.get('/api/orkut/createpayment', async (req, res) => {
     const { apikey } = req.query;    
     if (apikey !== 'Nabzxboy') {
