@@ -175,7 +175,7 @@ app.get('/api/download/spotify', async (req, res) => {
 
 app.get('/api/infonpm', async (req, res, next) => {
   try {
-        const apikeyInput = req.query.apikey,
+        var apikeyInput = req.query.apikey,
             query = req.query.query,
             host = req.hostname
             
@@ -186,7 +186,7 @@ app.get('/api/infonpm', async (req, res, next) => {
        fetch(encodeURI(`https://registry.npmjs.org/${query}`))
         .then(response => response.json())
         .then(data => {
-        const result = data;
+        var result = data;
              res.json({
                  status : true,
                  creator : `${creator}`,
@@ -198,6 +198,38 @@ app.get('/api/infonpm', async (req, res, next) => {
          	res.json(loghandler.error)
 })
 })
+
+app.get('/api/infonpm', async (req, res) => {
+    const { apikey, query, host } = req.query;
+    
+    if (apikey !== 'Nabzxboy') {
+    return res.status(403).json({ error: "Isi Parameter Apikey" });
+    }
+    
+    if (!query) {
+    return res.json({ error: "Isi Parameter Merchant." });
+    }
+    if (!host) {
+    return res.json({ error: "Isi Parameter Pin menggunakan Pin transaksi." });
+    }
+    
+    try {
+        const apiUrl = `https://registry.npmjs.org/${query}`;
+        fetch(encodeURI(`https://registry.npmjs.org/${query}`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+             res.json({
+                 status : true,
+                 creator : "alfinofc"
+                 result,
+                 message : "selamat menikmati" });
+    }
+});
+
+app.use((req, res, next) => {
+  res.status(404).send("Sorry can't find that!");
+});
 
 app.get('/api/download/ytdl', async (req, res) => {
   try {
