@@ -175,7 +175,7 @@ app.get('/api/download/spotify', async (req, res) => {
 
 app.get('/api/infonpm', async (req, res, next) => {
   try {
-        var apikeyInput = req.query.apikey,
+        const apikeyInput = req.query.apikey,
             query = req.query.query,
             host = req.hostname
             
@@ -186,7 +186,7 @@ app.get('/api/infonpm', async (req, res, next) => {
        fetch(encodeURI(`https://registry.npmjs.org/${query}`))
         .then(response => response.json())
         .then(data => {
-        var result = data;
+        const result = data;
              res.json({
                  status : true,
                  creator : `${creator}`,
