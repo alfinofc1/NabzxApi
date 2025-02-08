@@ -1,8 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const axios = require('axios');
-const { ytMp4, ytMp3 } = require('../lib/y2mate')
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.enable("trust proxy");
