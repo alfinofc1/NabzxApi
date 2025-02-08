@@ -173,7 +173,8 @@ app.get('/api/download/spotify', async (req, res) => {
   }
 });
 
-router.get('/infonpm', async (req, res, next) => {
+app.get('/api/infonpm', async (req, res, next) => {
+  try {
         var apikeyInput = req.query.apikey,
             query = req.query.query,
             host = req.hostname
