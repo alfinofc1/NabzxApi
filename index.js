@@ -173,6 +173,31 @@ app.get('/api/download/spotify', async (req, res) => {
   }
 });
 
+router.get('/infonpm', async (req, res, next) => {
+        var apikeyInput = req.query.apikey,
+            query = req.query.query,
+            host = req.hostname
+            
+	if(!apikeyInput) return res.json(loghandler.notparam)
+	if(apikeyInput != 'zahirgans') return res.json(loghandler.invalidKey)
+    if (!query) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter query"})
+
+       fetch(encodeURI(`https://registry.npmjs.org/${query}`))
+        .then(response => response.json())
+        .then(data => {
+        var result = data;
+             res.json({
+                 status : true,
+                 creator : `${creator}`,
+                 result,
+                 message : `jangan lupa follow ${creator}`
+             })
+         })
+         .catch(e => {
+         	res.json(loghandler.error)
+})
+})
+
 app.get('/api/download/ytdl', async (req, res) => {
   try {
     const { url, videoQuality, audioQuality } = req.query;
