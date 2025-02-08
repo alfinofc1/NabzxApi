@@ -18,7 +18,7 @@ const {
 } = require('./orkut.js') 
 
 const { terabox, ytdl } = require('./lib/scraper.js') 
-const { ytmp3, ytmp4 } = require('./lib/youtube.js') 
+
 // Log Info
 const messages = {
   error: {
@@ -211,62 +211,6 @@ app.get('/api/download/ytdl', async (req, res) => {
       error: 'Internal server error.',
     });
   }
-});
-
-app.get("/api/downloader/tiktokdl", async (req, res) => {
-    const { url } = req.query;
-    if (!url) return res.json("Isi Parameternya!");
-
-    try {
-        var anu = await tiktokdl.fetchData(`${url}`)
-
-        res.json({
-            status: true,
-            creator: global.creator,
-            result: anu     
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "An error occurred while fetching data." });
-    }
-})
-
-app.get("/api/downloader/ytmp3", async (req, res) => {
-    const { url } = req.query;
-    if (!url) return res.json("Isi Parameternya!");
-
-    try {
-        var anu = await YtMp3(`${url}`)
-
-        res.json({
-            status: true,
-            creator: global.creator,
-            metadata: anu.metadata, 
-            download: anu.download             
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "An error occurred while fetching data." });
-    }
-});
-
-app.get("/api/downloader/ytmp4", async (req, res) => {
-    const { url } = req.query;
-    if (!url) return res.json("Isi Parameternya!");
-
-    try {
-        var anu = await YtMp4(`${url}`)
-
-        res.json({
-            status: true,
-            creator: global.creator,
-            metadata: anu.metadata, 
-            download: anu.download         
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "An error occurred while fetching data." });
-    }
 });
 
 app.get('/api/orkut/createpayment', async (req, res) => {
