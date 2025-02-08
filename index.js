@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const ytmp3 = require('./lib/youtube.js')
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.enable("trust proxy");
@@ -17,8 +16,7 @@ const {
   checkQRISStatus
 } = require('./orkut.js') 
 
-const { terabox, ytdl } = require('./lib/scraper.js')
- 
+const { terabox, ytdl } = require('./lib/scraper.js') 
 
 // Log Info
 const messages = {
