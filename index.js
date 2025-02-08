@@ -16,9 +16,9 @@ const {
   checkQRISStatus
 } = require('./orkut.js') 
 
-const { terabox, ytdl } = require('./lib/scraper.js')
-
-const { ytMp4, ytMp3 } = require('./lib/y2mate')
+const { terabox, ytdl } = require('./lib/scraper.js') 
+const alip = require("../lib/listdl")
+const textto = require('soundoftext-js')
 
 // Log Info
 const messages = {
