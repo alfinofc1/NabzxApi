@@ -6,18 +6,6 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 app.enable("trust proxy");
 app.set("json spaces", 2);
-const { getBuffer, fetchJson } = require('./public/function.js');
-const { setTimeout: sleep } = require('timers/promises');
-const { groq } = require('./public/openai.js'); 
-const { YtMp3, YtMp4 } = require('./public/youtube.js');
-const { fbdl } = require('./public/facebook.js'); 
-const { remini } = require('./public/remini.js');
-const { getChatResponse, generateImage } = require("./public/createimage.js");
-const { igdl } = require('./public/instagram.js');
-const { brat } = require('./public/brat.js'); 
-const { chatbot } = require('./public/gpt.js');
-const { uploaderImg } = require('./public/uploadImage.js');
-const { tiktokdl } = require('./public/tiktok.js'):
  
 const {
   convertCRC16,
@@ -29,7 +17,19 @@ const {
   checkQRISStatus
 } = require('./orkut.js') 
 
-const { terabox, ytdl } = require('./lib/scraper.js') 
+const { terabox, ytdl } = require('./lib/scraper.js')
+const { getBuffer, fetchJson } = require('./lib/function.js') 
+const { setTimeout: sleep } = require('timers/promises');
+const { groq } = require('./lib/openai.js') 
+const { YtMp3, YtMp4 } = require('./lib/youtube.js') 
+const { fbdl } = require('./lib/facebook.js') 
+const { remini } = require('./lib/remini.js')
+const { getChatResponse, generateImage } = require("./lib/createimage.js");
+const { igdl } = require('./lib/instagram.js') 
+const { brat } = require('./lib/brat.js') 
+const { chatbot } = require('./lib/gpt.js')
+const { uploaderImg } = require('./lib/uploadImage.js');
+const { tiktokdl } = require('./lib/tiktok.js') 
 
 // Log Info
 const messages = {
