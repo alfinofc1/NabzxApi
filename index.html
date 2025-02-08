@@ -1,216 +1,273 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nabzx API</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Docs - Nabzx API</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* Base Styles */
+        /* Variabel untuk Background */
+        :root {
+            --background-url: url('https://img86.pixhost.to/images/562/564186179_skyzopedia.jpg');
+        }
+
         body {
-            font-family: 'Inter', Arial, sans-serif;
+            background: var(--background-url) no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            color: #fff;
-            background: url('https://files.catbox.moe/ak49rs.jpg') no-repeat center center fixed;
-            background-size: cover;
-            overflow-x: hidden;
+            transition: background 0.5s ease-in-out;
         }
 
-        h1, h2, p {
-            margin: 0;
+        /* Overlay */
+        .overlay {
+            background: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* Header Section */
-        .header {
-            text-align: center;
-            padding: 50px 20px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            margin: 20px auto;
+        .container {
+            position: relative;
+            z-index: 2;
             max-width: 800px;
-            animation: fadeIn 2s ease;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
         }
 
         .header h1 {
-            font-size: 48px;
-            font-weight: 700;
+            font-size: 2.7rem;
+            margin: 20px 0 10px;
         }
 
-        .header p {
-            font-size: 18px;
-            margin-top: 10px;
-            color: #e2e8f0;
+        .header h1 span {
+            color: #1e90ff;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Content Section */
-        .content {
-            max-width: 1200px;
-            margin: 50px auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            padding: 0 20px;
-        }
-
-        .card {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px;
-            padding: 30px;
-            flex: 1 1 calc(33.333% - 20px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.4);
-        }
-
-        .card h2 {
-            font-size: 22px;
-            color: #60a5fa;
-        }
-
-        .card p {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #e2e8f0;
-        }
-
-        .card-icon {
-            font-size: 50px;
-            color: #3b82f6;
-            margin-bottom: 20px;
-        }
-
-        /* Button Styles */
-        .buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            background: #2563eb;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+        .links {
+            margin: 30px 0;
             text-align: center;
         }
 
-        .button:hover {
-            background: #1e40af;
-            transform: scale(1.1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        .links a {
+            color: #1e90ff;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin: 5px 15px;
         }
 
-        /* Footer */
+        .section {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .api-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 8px 0;
+            transition: 0.3s;
+        }
+
+        .api-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .api-item .method {
+            color: #1e90ff;
+            font-weight: bold;
+        }
+
+        .api-item .try-btn {
+            background: #1e90ff;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .api-item .try-btn:hover {
+            background: #1565c0;
+        }
+
+        /* Tombol Ganti Background */
+        .change-bg-btn {
+            background: #ff9800;
+            color: #ffffff;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .change-bg-btn:hover {
+            background: #e68900;
+        }
+
         .footer {
             text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            margin: 40px auto;
-            max-width: 800px;
-            color: #e2e8f0;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #ccc;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .content {
-                flex-direction: column;
-                align-items: center;
+            .container {
+                width: 90%;
             }
-
-            .card {
-                flex: 1 1 100%;
-            }
-
-            .buttons {
+            .api-item {
                 flex-direction: column;
-                gap: 10px;
+                text-align: center;
+                padding: 15px;
+            }
+            .api-item .try-btn {
+                margin-top: 5px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Nabzx <span>API</span></h1>
+            <p>Powered by Nabzx &lt;\&gt;</p>
+        </div>
 
-    <!-- Header Section -->
-    <div class="header">
-        <h1>Nabzx API</h1>
-        <p>Powered By Nabzx</p>
+        <!-- Tombol untuk Mengganti Background -->
+        <button class="change-bg-btn" onclick="changeBackground()">Ganti Background</button>
+
+        <div class="links">
+            <a href="https://whatsapp.com/channel/0029Vag5c53KAwEk4hnzN220"><i class="fas fa-comments"></i> Channel WhatsApp</a>
+            <a href="https://wa.me/6285783089587"><i class="fas fa-paperclip"></i> Development</a>
+            <a href="https://wa.me/6282178006414"><i class="fas fa-user"></i> Contact Developer V2</a>
+        </div>
+
+        <div class="section">
+            <h2>Orderkuota Gateway</h2>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>Create Payment</span>
+                <button class="try-btn"><a href="/api/orkut/createpayment?apikey=&amount=&codeqr=">TRY</a></button>
+            </div>
+            <div class="section">
+    <h2>AI Features</h2>
+    <div class="api-item">
+        <span class="method">POST</span>
+        <span>ChatGPT</span>
+        <button class="try-btn"><a href="/api/ai/chat?message=">TRY</a></button>
+    </div>
+    <div class="api-item">
+        <span class="method">POST</span>
+        <span>Ai Create Image</span>
+        <button class="try-btn"><a href="/api/ai/image?prompt=">TRY</a></button>
+    </div>
+</div>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>Cek Status Payment</span>
+                <button class="try-btn"><a href="/api/orkut/cekstatus?apikey=&merchant=&keyorkut=">TRY</a></button>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Downloader</h2>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>TikTok</span>
+                <button class="try-btn"><a href="/api/downloader/tiktokdl?url=">TRY</a></button>
+            </div>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>Instagram</span>
+                <button class="try-btn"><a href="/api/downloader/igdl?url=">TRY</a></button>
+            </div>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>Facebook</span>
+                <button class="try-btn"><a href="/api/downloader/fbdl?url=">TRY</a></button>
+            </div>            
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>YTMP3</span>
+                <button class="try-btn"><a href="/api/downloader/ytmp3?url=">TRY</a></button>
+            </div>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>YTMP4</span>
+                <button class="try-btn"><a href="/api/downloader/ytmp4?url=">TRY</a></button>
+            </div>            
+        </div>
+        <div class="section">
+            <h2>Tools OpenAI</h2>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>OpenAi</span>
+                <button class="try-btn"><a href="/api/tools/openai?prompt=sekarang kamu adalah Nabzx-AI&msg=">TRY</a></button>
+            </div>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>GPT</span>
+                <button class="try-btn"><a href="/api/tools/gptchat1?text=">TRY</a></button>
+            </div>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>Gemini</span>
+                <button class="try-btn"><a href="/api/tools/gemini?text=">TRY</a></button>
+            </div>   
+              <div class="api-item">
+                <span class="method">GET</span>
+                <span>Remini</span>
+                <button class="try-btn"><a href="/api/tools/remini?url=">TRY</a></button>
+            </div>         
+        </div> 
+        <div class="section">
+            <h2>Canvas Creator</h2>
+            <div class="api-item">
+                <span class="method">GET</span>
+                <span>Brat</span>
+                <button class="try-btn"><a href="/api/canvas/brat?text=">TRY</a></button>
+            </div>
+        </div>       
     </div>
 
-    <!-- Main Content -->
-    <div class="content">
-        <div class="card">
-            <div class="card-icon">⚙️</div>
-            <h2>Tentang API</h2>
-            <p>API ini mempermudah akses ke berbagai layanan dengan fitur lengkap dan bebas biaya.</p>
+        <div class="footer">
+            &copy; 2023 NabzxHost. All rights reserved.
         </div>
-        <div class="card">
-            <div class="card-icon">🔋</div>
-            <h2>Status Baterai</h2>
-            <p id="battery-status">Memuat informasi baterai...</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">🌐</div>
-            <h2>Alamat IP Anda</h2>
-            <p id="ip-address">Memuat IP address...</p>
-        </div>
-    </div>
-
-    <!-- Buttons Section -->
-    <div class="buttons">
-        <a href="https://nabzx-api.vercel.app/api/orkut/createpayment?apikey=Nabzxboy&amount=${totalAmount}&codeqr=${qrisorkut}" target="_blank" class="button">Api Create Qris</a>
-        <a href="api/ai/dukun?content=hai" target="_blank" class="button">ai dukun</a>
-        <a href="https://nabzx-api.vercel.app/api/orkut/cekstatus?apikey=Nabzxboy&merchant=${idmerchant}&keyorkut=${apikeyorkut}" target="_blank" class="button">Api Status Payment</a>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>&copy; 2024 Nabzx API. All rights reserved.</p>
     </div>
 
     <script>
-        // Get battery status
-        navigator.getBattery().then(function(battery) {
-            const batteryStatus = document.getElementById('battery-status');
-            batteryStatus.textContent = `Baterai: ${Math.round(battery.level * 100)}%`;
-        });
+        let backgroundToggle = false;
 
-        // Get IP address
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('ip-address').textContent = `IP Address: ${data.ip}`;
-            });
+        function changeBackground() {
+            if (backgroundToggle) {
+                document.documentElement.style.setProperty('--background-url', "url('https://img86.pixhost.to/images/562/564186179_skyzopedia.jpg')");
+            } else {
+                document.documentElement.style.setProperty('--background-url', "url('https://img86.pixhost.to/images/562/564186592_skyzopedia.jpg')");
+            }
+            backgroundToggle = !backgroundToggle;
+        }
     </script>
 </body>
 </html>
