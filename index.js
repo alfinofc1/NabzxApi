@@ -18,7 +18,7 @@ const {
 } = require('./orkut.js') 
 
 const { terabox, ytdl } = require('./lib/scraper.js') 
-const { YtMp3, YtMp4 } = require('./lib/youtube.js') 
+const { ytmp3, ytmp4 } = require('./lib/youtube.js') 
 // Log Info
 const messages = {
   error: {
