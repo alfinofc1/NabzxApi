@@ -17,19 +17,7 @@ const {
   checkQRISStatus
 } = require('./orkut.js') 
 
-const { terabox, ytdl } = require('./lib/scraper.js')
-const { getBuffer, fetchJson } = require('./lib/function.js') 
-const { setTimeout: sleep } = require('timers/promises');
-const { groq } = require('./lib/openai.js') 
-const { YtMp3, YtMp4 } = require('./lib/youtube.js') 
-const { fbdl } = require('./lib/facebook.js') 
-const { remini } = require('./lib/remini.js')
-const { getChatResponse, generateImage } = require("./lib/createimage.js");
-const { igdl } = require('./lib/instagram.js') 
-const { brat } = require('./lib/brat.js') 
-const { chatbot } = require('./lib/gpt.js')
-const { uploaderImg } = require('./lib/uploadImage.js');
-const { tiktokdl } = require('./lib/tiktok.js') 
+const { terabox, ytdl } = require('./lib/scraper.js') 
 
 // Log Info
 const messages = {
