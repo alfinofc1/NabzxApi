@@ -1,12 +1,23 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const axios = require('axios');
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const bodyParser = require('body-parser');
+const fs = require("fs");
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.enable("trust proxy");
-app.set("json spaces", 2);
- 
+const axios = require("axios")
+const { getBuffer, fetchJson } = require('./public/function.js') 
+const { setTimeout: sleep } = require('timers/promises');
+const { groq } = require('./public/openai.js') 
+const { YtMp3, YtMp4 } = require('./public/youtube.js') 
+const { fbdl } = require('./public/facebook.js') 
+const { remini } = require('./public/remini.js')
+const { getChatResponse, generateImage } = require("./public/createimage.js");
+const { igdl } = require('./public/instagram.js') 
+const { brat } = require('./public/brat.js') 
+const { chatbot } = require('./public/gpt.js')
+const { uploaderImg } = require('./public/uploadImage.js');
+const { tiktokdl } = require('./public/tiktok.js') 
 const {
   convertCRC16,
   generateTransactionId,
@@ -15,212 +26,26 @@ const {
   generateQRIS,
   createQRIS,
   checkQRISStatus
-} = require('./orkut.js') 
+} = require('./public/orkut.js') 
 
-const { terabox, ytdl } = require('./lib/scraper.js') 
 
-// Log Info
-const messages = {
-  error: {
-    status: 404,
-    creator: "Nabzx",
-    result: "Error, Service Unavailable",
-  },
-  notRes: {
-    status: 404,
-    creator: "Nabzx",
-    result: "Error, Invalid JSON Result",
-  },
-  query: {
-    status: 400,
-    creator: "Nabzx",
-    result: "Please input parameter query!",
-  },
-  amount: {
-    status: 400,
-    creator: "Nabzx",
-    result: "Please input parameter amount!",
-  },
-  codeqr: {
-    status: 400,
-    creator: "Nabzx",
-    result: "Please input parameter codeqr!",
-  },
-  url: {
-    status: 400,
-    creator: "Nabzx",
-    result: "Please input parameter URL!",
-  },
-  notUrl: {
-    status: 404,
-    creator: "Nabzx",
-    result: "Error, Invalid URL",
-  },
-};
-function genreff() {
-  const characters = '0123456789';
-  const length = 5;
-  let reffidgen = '';
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    reffidgen += characters[randomIndex];
-  }
-  return reffidgen;
-}
-
-// Middleware untuk CORS
+app.enable("trust proxy");
+app.set("json spaces", 2);
 app.use(cors());
-
-
-
-
-
-
-// Endpoint untuk servis dokumen HTML
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'feature.html'));
-});
-
-app.get("/api/download/tiktok", async (req, res) => {
-  const { url } = req.query;
-  if (!url) return res.status(400).json(messages.url);
-
-  try {
-  const { tiktokdl } = require("tiktokdl")
-    const data = await tiktokdl(url);
-    if (!data) return res.status(404).json(messages.notRes);
-    res.json({ status: true, creator: "Nabzx", result: data });
-  } catch (e) {
-    res.status(500).json(messages.error);
-  }
-});
-
-app.get('/api/download/terabox', async (req, res) => {
- try {
-    const { url } = req.query;
-    if (!url) {
-      return res.status(400).json({
-        status: false,
-        creator: "Nabzx",
-        error: "Isi Parameter Url.",
-      });
-    }
-    const results = await terabox(url);
-    if (!results || results.length === 0) {
-      return res.status(404).json({
-        status: false,
-        creator: "Nabzx",
-        error: "No files found or unable to generate download links.",
-      });
-    }
-    return res.status(200).json({
-      success: true,
-      creator: "Nabzx",
-      results: results,
-      request_at: new Date(),
-    });
-  } catch (error) {
-    console.error("Error:", error.message);
-    return res.status(500).json({
-      status: false,
-      creator: "Nabzx",
-      error: "Internal server error.",
-    });
-  }
-});
-
-app.get('/api/download/spotify', async (req, res) => {
-  try {
-    const { url } = req.query;
-
-    if (!url) {
-      return res.status(400).json({
-        status: false,
-        creator: "Nabzx",
-        error: "Isi Parameter Url."
-      });
-    }
-
-    const response = await axios.get(`https://api.siputzx.my.id/api/d/spotify?url=${encodeURIComponent(url)}`);
-
-    const metadata = response.data.metadata;
-    const downloadUrl = response.data.download;
-
-    return res.status(200).json({
-      status: true,
-      creator: "Nabzx",
-      metadata: {
-        album_artist: metadata.album_artist,
-        album_name: metadata.album_name,
-        artist: metadata.artist,
-        cover_url: metadata.cover_url,
-        name: metadata.name,
-        release_date: metadata.releaseDate,
-        track_number: metadata.trackNumber,
-        spotify_url: metadata.url
-      },
-      download: downloadUrl
-    });
-  } catch (e) {
-    console.error("Error:", e.message);
-    return res.status(500).json({
-      status: false,
-      creator: "Nabzx", 
-      error: "Internal server error."
-    });
-  }
-});
-
-app.get('/api/download/ytdl', async (req, res) => {
-  try {
-    const { url, videoQuality, audioQuality } = req.query;
-
-    if (!url || !videoQuality || !audioQuality) {
-      return res.status(400).json({
-        success: false,
-        creator: "Nabzx",
-        error: "Isi Parameter url, videoQuality, dan audioQuality.",
-      });
-    }
-
-    const videoQualityIndex = parseInt(videoQuality, 10);
-    const audioQualityIndex = parseInt(audioQuality, 10);
-
-    try {
-      const result = await ytdl.downloadVideoAndAudio(url, videoQualityIndex, audioQualityIndex);
-      return res.status(200).json({
-        success: true,
-        creator: "Nabzx",
-        result,
-      });
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        creator: "Nabzx",
-        error: error.message,
-      });
-    }
-  } catch (error) {
-    console.error('Error:', error.message);
-    return res.status(500).json({
-      success: false,
-      creator: "Nabzx",
-      error: 'Internal server error.',
-    });
-  }
-});
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "function")));
+app.use(bodyParser.raw({ limit: '50mb', type: '*/*' }));
+    
 app.get('/api/orkut/createpayment', async (req, res) => {
-    const { apikey } = req.query;    
-    if (apikey !== 'Nabzxboy') {
-    return res.status(403).json({ error: "Isi Parameter Apikey" });
+    const { apikey, amount } = req.query;
+    if (!apikey) {
+    return res.json("Isi Parameter Apikey.");
     }
-    const { amount } = req.query;
+    const check = global.apikey
+if (!check.includes(apikey)) return res.json("Apikey Tidak Valid!.")
     if (!amount) {
-    return res.json("Isi Parameter Amount.");
+    return res.json("Isi Parameter Amount.")
     }
     const { codeqr } = req.query;
     if (!codeqr) {
@@ -228,29 +53,26 @@ app.get('/api/orkut/createpayment', async (req, res) => {
     }
     try {
         const qrData = await createQRIS(amount, codeqr);
-        res.json({ status: true, creator: "Nabzx", result: qrData });        
+        res.json({ status: true, creator: global.creator, result: qrData });        
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+
+
 app.get('/api/orkut/cekstatus', async (req, res) => {
-    const { apikey, merchant, keyorkut } = req.query;
-    
-    if (apikey !== 'Nabzxboy') {
-    return res.status(403).json({ error: "Isi Parameter Apikey" });
-    }
-    
+    const { merchant, keyorkut } = req.query;
         if (!merchant) {
-        return res.json({ error: "Isi Parameter Merchant." });
+        return res.json("Isi Parameter Merchant.")
     }
     if (!keyorkut) {
-        return res.json({ error: "Isi Parameter Token menggunakan token kalian." });
+        return res.json("Isi Parameter Keyorkut.");
     }
     try {
         const apiUrl = `https://gateway.okeconnect.com/api/mutasi/qris/${merchant}/${keyorkut}`;
         const response = await axios.get(apiUrl);
-        const result = response.data;
+        const result = await response.data;
                 // Check if data exists and get the latest transaction
         const latestTransaction = result.data && result.data.length > 0 ? result.data[0] : null;
                 if (latestTransaction) {
@@ -261,50 +83,227 @@ app.get('/api/orkut/cekstatus', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-});
+})
+// Endpoint untuk servis dokumen HTML
+app.get('/', (req, res) => {
+  var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  console.log("Client : " + ip)
+  res.sendFile(path.join(__dirname, 'index.html'));
+})
+app.get("/api/ai/chat", async (req, res) => {
+    const { prompt } = req.query;
+    if (!prompt) return res.json("Isi Parameternya!");
+    
+app.get("/api/tools/openai", async (req, res) => {
+    const { prompt, msg } = req.query;
+    if (!prompt || !msg) return res.json("Isi Parameternya!");
 
-app.get('/api/orkut/ceksaldo', async (req, res) => {
-    const { apikey, merchant, pin, password } = req.query;
-    
-    if (apikey !== 'Nabzxboy') {
-    return res.status(403).json({ error: "Isi Parameter Apikey" });
-    }
-    
-    if (!merchant) {
-    return res.json({ error: "Isi Parameter Merchant." });
-    }
-    if (!pin) {
-    return res.json({ error: "Isi Parameter Pin menggunakan Pin transaksi." });
-    }
-    if (!password) {
-        return res.status(400).json({ error: "Parameter 'password' tidak diisi." });
-    }
-    
     try {
-        const apiUrl = `https://h2h.okeconnect.com/trx/balance?memberID=${merchant}&pin=${pin}&password=${password}`;
-        const response = await axios.get(apiUrl);        
-        const result = response.data;
-        if (result && result.data && Array.isArray(result.data) && result.data.length > 0) {
-            const latestTransaction = result.data[0];
-            return res.json(latestTransaction);
-        } else {
-            return res.json({ message: "Tidak ada transaksi ditemukan." });
+        var anu = await groq(`${msg}`, `${prompt}`)
+        if (!anu.status) {
+        res.json ({
+        status: false,
+        creator: global.creator,
+        result: anu.respon
+        })
         }
+
+        res.json({
+            status: true,
+            creator: global.creator,
+            result: anu.respon     
+        });
     } catch (error) {
-        console.error("Error saat mengakses API eksternal:", error.message);
-        const errorMessage = error.response ? error.response.data : error.message;
-        return res.status(500).json({ error: errorMessage });
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+})
+
+app.get("/api/tools/gptchat1", async (req, res) => {
+    const { text } = req.query;
+    if (!text) return res.json("Isi Parameternya!");
+
+    try {
+        var anu = await chatbot.send(`${text}`, "gpt-3.5-turbo")
+        if (!anu?.choices[0]?.message?.content) {
+        res.json ({
+        status: false,
+        creator: global.creator,
+        result: null
+        })
+        }
+
+        res.json({
+            status: true,
+            creator: global.creator,
+            result: anu.choices[0].message.content
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+})
+
+
+app.get("/api/tools/gemini", async (req, res) => {
+    const { text } = req.query;
+    if (!text) return res.json("Isi Parameternya!");
+
+try {
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const genAI = new GoogleGenerativeAI("AIzaSyCPlGoKHoePXhHIaI7TLUESYgExSiB5XbI");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+const prompt = text
+
+const result = await model.generateContent(prompt);
+const anu = await result.response.text()
+       
+        if (!anu) {
+        res.json ({
+        status: false,
+        creator: global.creator,
+        result: null
+        })
+        }
+
+        res.json({
+            status: true,
+            creator: global.creator,
+            result: anu
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+})
+
+
+app.get("/api/downloader/fbdl", async (req, res) => {
+    const { url } = req.query;
+    if (!url) return res.json("Isi Parameternya!");
+
+    try {
+        var anu = await fbdl(`${url}`)
+        res.json({
+        status: true, 
+        creator: global.creator, 
+        result: anu
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+})
+
+app.get("/api/downloader/igdl", async (req, res) => {
+    const { url } = req.query;
+    if (!url) return res.json("Isi Parameternya!");
+
+    try {
+        var anu = await igdl(`${url}`)
+        res.json(anu)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+})
+
+app.get("/api/downloader/tiktokdl", async (req, res) => {
+    const { url } = req.query;
+    if (!url) return res.json("Isi Parameternya!");
+
+    try {
+        var anu = await tiktokdl.fetchData(`${url}`)
+
+        res.json({
+            status: true,
+            creator: global.creator,
+            result: anu     
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+})
+
+app.get("/api/downloader/ytmp3", async (req, res) => {
+    const { url } = req.query;
+    if (!url) return res.json("Isi Parameternya!");
+
+    try {
+        var anu = await YtMp3(`${url}`)
+
+        res.json({
+            status: true,
+            creator: global.creator,
+            metadata: anu.metadata, 
+            download: anu.download             
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
     }
 });
 
+app.get("/api/downloader/ytmp4", async (req, res) => {
+    const { url } = req.query;
+    if (!url) return res.json("Isi Parameternya!");
+
+    try {
+        var anu = await YtMp4(`${url}`)
+
+        res.json({
+            status: true,
+            creator: global.creator,
+            metadata: anu.metadata, 
+            download: anu.download         
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+});
+
+app.get("/api/tools/remini", async (req, res) => {
+    try {     
+      const { url } = req.query
+      if (!url) return res.json("Isi Parameternya!");
+      const image = await getBuffer(url)
+      if (!image) res.json("Error!");
+      const result = await remini(image, "enhance")
+      await res.set("Content-Type", "image/png")
+      await res.send(result)
+    } catch (error) {
+        console.error(error);
+        res.send(error)
+    }
+})
+
+
+app.post("/api/tools/upload", async (req, res) => {
+    try {     
+      const image = req.body
+      if (!image) return res.send("POST METHOD!")
+      const result = await uploaderImg(image)
+      if (!result.status) return res.send("Image Tidak Ditemukan!")
+      return res.json(result)
+    } catch (error) {
+        console.error(error);
+        res.send(error)
+    }
+})
+
+
+// Error Handling Middleware
 app.use((req, res, next) => {
   res.status(404).send("Sorry can't find that!");
 });
 
-// Handle error
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 });
 
 // Jalankan server
@@ -312,4 +311,9 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-module.exports = app
+
+
+
+
+
+
